@@ -2,7 +2,7 @@ import java.util.Vector
 import kotlin.collections.removeFirst
 
 object History : Command {
-    var history = Vector<String>()
+    var history = Vector<Any>()
     fun addHistory(command: String) {
         if (history.size < 8) {
             history.add(command)
@@ -12,7 +12,11 @@ object History : Command {
         }
     }
 
-    override fun execute() {
-        println(history)
+    var result = PrintResult(
+        Vector = history
+    )
+
+    override fun execute(): PrintResult {
+        return result
     }
 }

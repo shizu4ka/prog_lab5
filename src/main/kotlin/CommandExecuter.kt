@@ -7,9 +7,11 @@ fun findCommand(command: String?) {
         exit()
     } else if (command.equals("help")) {
         val helpCommand = HelpCommand()
-        helpCommand.execute()
+        helpCommand.result.print()
     } else if (command.equals("history")) {
-        History.execute()
+        var result = History.execute()
+        result.print()
+
     }
 }
 
