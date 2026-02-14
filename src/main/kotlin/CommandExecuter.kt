@@ -2,6 +2,7 @@ import History
 import History.execute
 import java.util.Vector
 
+
 fun findCommand(command: String?) {
     if (command.equals("exit")) {
         exit()
@@ -9,9 +10,12 @@ fun findCommand(command: String?) {
         val helpCommand = HelpCommand()
         helpCommand.result.print()
     } else if (command.equals("history")) {
-        var result = History.execute()
+        var result = execute()
         result.print()
-
+    } else if (command.equals("add")) {
+        var result = AddElement()
+        var obj = result.addObject()
+        cities.cities.add(obj)
     }
 }
 
