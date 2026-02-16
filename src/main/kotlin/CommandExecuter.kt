@@ -1,6 +1,4 @@
-import History
 import History.execute
-import java.util.Vector
 
 
 fun findCommand(command: String?) {
@@ -15,7 +13,9 @@ fun findCommand(command: String?) {
     } else if (command.equals("add")) {
         var result = AddElement()
         var obj = result.addObject()
-        cities.cities.add(obj)
+        Cities.cities.add(obj)
+    } else if (command.equals("info")) {
+        Cities.getInfo()
     }
 }
 
