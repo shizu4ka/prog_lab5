@@ -6,7 +6,7 @@ class PrintResult(
     var Int: Int? = null,
     var Boolean: Boolean? = null
 ) {
-    fun print() {
+    fun printResult() {
         if (String != null) println(String)
         if (Vector != null) println(Vector)
         if (Int != null) println(Int)

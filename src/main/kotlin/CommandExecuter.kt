@@ -6,16 +6,17 @@ fun findCommand(command: String?) {
         exit()
     } else if (command.equals("help")) {
         val helpCommand = HelpCommand()
-        helpCommand.result.print()
+        helpCommand.result.printResult()
     } else if (command.equals("history")) {
-        var result = execute()
-        result.print()
+        var result = History.execute()
+        result.printResult()
     } else if (command.equals("add")) {
         var result = AddElement()
         var obj = result.addObject()
         Cities.cities.add(obj)
     } else if (command.equals("info")) {
-        Cities.getInfo()
+        var result:PrintResult = Cities.getInfo()
+        result.printResult()
     }
 }
 

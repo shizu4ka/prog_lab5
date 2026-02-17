@@ -56,9 +56,9 @@ public class AddElement {
 
     private fun coordinatesRead(): Coordinates {
         print("Enter city coordinates:\n")
-        var x: Long? = null
-        var y: Float? = null
         while (true) {
+            var x: Long? = null
+            var y: Float? = null
             print("Enter x: ")
             val inputX = readlnOrNull()?.trim()
             if (!inputX.isNullOrEmpty()) {
@@ -66,6 +66,7 @@ public class AddElement {
                     x = inputX.toLong()
                 } catch (e: NumberFormatException) {
                     println("Error: invalid number")
+                    continue
                 }
             }
             print("Enter y: ")
@@ -75,11 +76,14 @@ public class AddElement {
                     y = inputY.toFloat()
                 } catch (e: NumberFormatException) {
                     println("Error: invalid number")
+                    continue
                 }
             }
             if (x != null && y != null) {
                 var cordinates = Coordinates(x = x, y = y)
                 return cordinates
+            } else {
+                println("Error: invalid coordinates")
             }
         }
     }
@@ -108,6 +112,7 @@ public class AddElement {
                     var population = input.toBigInteger()
                     return population
                 } catch (e: NumberFormatException) {
+                    println("Error: invalid number")
                 }
             }
         }
@@ -117,9 +122,12 @@ public class AddElement {
         while (true) {
             print("Enter meters: ")
             val input = readlnOrNull()?.trim()
-            if (!input.isNullOrEmpty()) {
+            if (input == null || input == "") {
+                return null
+            }
+            else if (!input.isNullOrEmpty()) {
                 try {
-                    var metersAboveSeaLevel = input.toFloatOrNull()
+                    var metersAboveSeaLevel = input.toFloat()
                     return metersAboveSeaLevel
                 } catch (e: NumberFormatException) {
                     println("Error: invalid number")
@@ -200,11 +208,10 @@ public class AddElement {
         if (input.isNullOrEmpty()) {
             return null
         }
-        try{
+        try {
             var height = input.toDouble()
             return Human(height = height)
-        }
-        catch (e: NumberFormatException) {
+        } catch (e: NumberFormatException) {
             println("Error: enter a number")
             governorRead()
         }

@@ -8,11 +8,12 @@ object Cities {
 
     val initializationDate: LocalDateTime = LocalDateTime.now()
     val format = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss")
-    fun getInfo() {
-        println(
-            "Collection type: ${cities::class}\n" +
+    fun getInfo(): PrintResult {
+        var result: PrintResult = PrintResult(
+            String = "Collection type: ${cities::class}\n" +
                     "vector initialization date: ${initializationDate.format(format)}\n" +
                     "Cities: ${cities.size}"
         )
+        return result
     }
 }
