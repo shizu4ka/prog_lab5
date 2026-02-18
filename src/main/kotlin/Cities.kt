@@ -55,5 +55,22 @@ object Cities {
         }
     }
 
+    fun remove_by_id(id: Long) {
+        try {
+            var flag = false
+            for (c in cities) {
+                if (id == c.id) {
+                    cities.remove(c)
+                    println("Remove element by id: $id")
+                    flag = true
+                    break
+                }
+            }
+            if (!flag) println("There is no item with this id in the collection.")
+        } catch (e: Exception) {
+            println("There is no item with this id in the collection.")
+        }
+    }
+
 
 }

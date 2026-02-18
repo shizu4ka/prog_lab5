@@ -29,12 +29,18 @@ fun findCommand(command: String?) {
         } catch (e: Exception) {
             println("Error with Clearing Cities")
         }
-    }
-    else if(command!!.matches("^update \\d+$".toRegex())) {
-        try{
+    } else if (command!!.matches("^update \\d+$".toRegex())) {
+        try {
             var mas = command.split(' ')
             Cities.updateElement(mas.last().toLong())
-        }catch(e:Exception){
+        } catch (e: Exception) {
+            println("Error with id")
+        }
+    } else if (command!!.matches("^remove_by_id \\d+$".toRegex())) {
+        try {
+            var mas = command.split(' ')
+            Cities.remove_by_id(mas.last().toLong())
+        } catch (e: Exception) {
             println("Error with id")
         }
     }
