@@ -16,4 +16,10 @@ object Cities {
         )
         return result
     }
+
+    fun getCollection(): PrintResult {
+        var collectionInfo: String = cities.toString()
+        var result: PrintResult = PrintResult(String = collectionInfo)
+        return result
+    }
 }

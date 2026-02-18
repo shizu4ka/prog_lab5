@@ -15,7 +15,10 @@ fun findCommand(command: String?) {
         var obj = result.addObject()
         Cities.cities.add(obj)
     } else if (command.equals("info")) {
-        var result:PrintResult = Cities.getInfo()
+        var result: PrintResult = Cities.getInfo()
+        result.printResult()
+    } else if (command.equals("show")) {
+        var result = Cities.getCollection()
         result.printResult()
     }
 }
