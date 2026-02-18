@@ -124,8 +124,7 @@ public class AddElement {
             val input = readlnOrNull()?.trim()
             if (input == null || input == "") {
                 return null
-            }
-            else if (!input.isNullOrEmpty()) {
+            } else if (!input.isNullOrEmpty()) {
                 try {
                     var metersAboveSeaLevel = input.toFloat()
                     return metersAboveSeaLevel

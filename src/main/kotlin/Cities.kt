@@ -18,8 +18,22 @@ object Cities {
     }
 
     fun getCollection(): PrintResult {
-        var collectionInfo: String = cities.toString()
+        var collectionInfo: String = ""
+        for (c in cities) {
+            collectionInfo = collectionInfo + c.toString() + "\n"
+        }
         var result: PrintResult = PrintResult(String = collectionInfo)
-        return result
+        if (result.String != "") return result
+        else {
+            result.String = "Collection is empty"
+            return result
+        }
     }
+
+    fun clearCollection() {
+        cities.clear()
+        println("Collection is empty")
+    }
+
+
 }
