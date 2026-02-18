@@ -1,3 +1,5 @@
+import Cities.cities
+
 fun findCommand(command: String?) {
     if (command.equals("exit")) {
         exit()
@@ -41,7 +43,20 @@ fun findCommand(command: String?) {
             var mas = command.split(' ')
             Cities.remove_by_id(mas.last().toLong())
         } catch (e: Exception) {
-            println("Error with id")
+            println("Error with removed, try again")
+        }
+    } else if (command!!.matches("^remove_at \\d+$".toRegex())) {
+        try {
+            var mas = command.split(' ')
+            Cities.remove_at(mas.last().toInt())
+        } catch (e: Exception) {
+            println("Error with removed, try again")
+        }
+    } else if (command.equals("remove_last")) {
+        try {
+            Cities.removeLastElement()
+        }catch (e:Exception){
+            println("Error with remove element")
         }
     }
 }

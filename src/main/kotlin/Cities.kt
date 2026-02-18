@@ -72,5 +72,25 @@ object Cities {
         }
     }
 
+    fun remove_at(index: Int) {
+        try {
+            var flag = false
+            if (index < cities.size) {
+                cities.removeAt(index)
+                flag = true
+                println("Remove element by index: $index")
+            }
+            if (!flag) println("There is no item with this index in the collection.")
+        } catch (e: Exception) {
+            println("There is no item with this index in the collection.")
+        }
+    }
 
+    fun removeLastElement(){
+        if (cities.isNotEmpty()){
+                cities.removeLast()
+                println("Remove element by last")
+        }
+        else println("Collection is empty")
+    }
 }
