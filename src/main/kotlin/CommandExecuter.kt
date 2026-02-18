@@ -1,6 +1,3 @@
-import History.execute
-
-
 fun findCommand(command: String?) {
     if (command.equals("exit")) {
         exit()
@@ -11,7 +8,7 @@ fun findCommand(command: String?) {
         var result = History.execute()
         result.printResult()
     } else if (command.equals("add")) {
-        var result = AddElement()
+        var result = AddObject()
         try {
             var obj = result.addObject()
             Cities.cities.add(obj)
@@ -31,6 +28,14 @@ fun findCommand(command: String?) {
             println("Collection cleared")
         } catch (e: Exception) {
             println("Error with Clearing Cities")
+        }
+    }
+    else if(command!!.matches("^update \\d+$".toRegex())) {
+        try{
+            var mas = command.split(' ')
+            Cities.updateElement(mas.last().toLong())
+        }catch(e:Exception){
+            println("Error with id")
         }
     }
 }

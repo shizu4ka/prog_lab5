@@ -11,7 +11,7 @@ import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
 
 
-public class AddElement {
+public class AddObject {
 
     private val dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
     val nextId = if (Cities.cities.isEmpty()) 1L else Cities.cities.last().id + 1

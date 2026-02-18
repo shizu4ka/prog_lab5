@@ -1,4 +1,6 @@
 import Collection.City
+import History.addHistory
+import jdk.javadoc.internal.doclets.formats.html.markup.HtmlStyles
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Vector
@@ -33,6 +35,24 @@ object Cities {
     fun clearCollection() {
         cities.clear()
         println("Collection is empty")
+    }
+
+    fun updateElement(id: Long) {
+        var AddObject = AddObject()
+        try {
+            var flag = false
+            for (c in cities) {
+                if (id == c.id) {
+                    var index: Int = cities.indexOf(c)
+                    cities[index] = AddObject.addObject()
+                    println("Ubdate element by id: $id")
+                    flag = true
+                }
+            }
+            if (!flag) println("There is no item with this id in the collection.")
+        } catch (e: Exception) {
+            println("There is no item with this id in the collection.")
+        }
     }
 
 
