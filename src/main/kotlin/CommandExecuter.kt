@@ -1,4 +1,5 @@
 import Cities.cities
+import Collection.Climate
 import Collection.StandardOfLiving
 import java.util.Vector
 
@@ -99,6 +100,28 @@ fun findCommand(command: String?) {
             var result = PrintResult(String = string)
             result.printResult()
         }
+    } else if (command!!.matches("^filter_greater_than_climate \\w+$".toRegex())) {
+        try {
+            var mas = command.split(' ')
+            var param = mas.last()
+            Climate.values().forEach { enumValues ->
+                if (enumValues.toString().equals(param)) {
+                    var climate = enumValues
+                    var filtered_cities = Cities.filter_greater_than_climate(climate)
+                    if (filtered_cities == null) print("No cities with this climate")
+                    else {
+                        var string = ""
+                        for (c in filtered_cities) {
+                            string += c.toString() + "\n"
+                        }
+                        var result = PrintResult(String = string)
+                        result.printResult()
+                    }
+                }
+            }
+        } catch (e: Exception) {
+            println("Error with filter")
+        }
     }
 }
 
@@ -106,4 +129,3 @@ fun exit() {
     println("Exit")
     System.exit(0)
 }
-

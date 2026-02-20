@@ -1,4 +1,5 @@
 import Collection.City
+import Collection.Climate
 import Collection.StandardOfLiving
 import java.math.BigInteger
 import java.time.LocalDateTime
@@ -126,6 +127,19 @@ object Cities {
         for (c in cities) {
             if (c.name.startsWith(name)) {
                 result.add(c)
+            }
+        }
+        if (result.isNotEmpty()) return result
+        else return null
+    }
+
+    fun filter_greater_than_climate(climate: Climate): Vector<City>? {
+        var result = Vector<City>()
+        for (c in cities) {
+            if(c.climate != null) {
+                if (c.climate!!.ordinal > climate.ordinal) {
+                    result.add(c)
+                }
             }
         }
         if (result.isNotEmpty()) return result
