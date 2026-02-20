@@ -1,5 +1,6 @@
 import Cities.cities
 import Collection.StandardOfLiving
+import java.util.Vector
 
 fun findCommand(command: String?) {
     if (command.equals("exit")) {
@@ -84,6 +85,19 @@ fun findCommand(command: String?) {
             }
         } catch (e: Exception) {
             println("Invalid standart")
+        }
+    } else if (command!!.matches("^filter_starts_with_name \\w+$".toRegex())) {
+        var mas = command.split(' ')
+        var param = mas.last()
+        var result = Cities.filter_starts_with_name(param)
+        if (result == null) println("There is no city starting with that name.")
+        else {
+            var string = ""
+            for (c in result) {
+                string += c.toString() + "\n"
+            }
+            var result = PrintResult(String = string)
+            result.printResult()
         }
     }
 }

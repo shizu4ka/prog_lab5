@@ -34,7 +34,6 @@ object Cities {
 
     fun clearCollection() {
         cities.clear()
-        println("Collection is empty")
     }
 
     fun addCity(city: City) {
@@ -115,6 +114,17 @@ object Cities {
         var result = Vector<City>()
         for (c in cities) {
             if (c.standardOfLiving == standard) {
+                result.add(c)
+            }
+        }
+        if (result.isNotEmpty()) return result
+        else return null
+    }
+
+    fun filter_starts_with_name(name: String): Vector<City>? {
+        var result = Vector<City>()
+        for (c in cities) {
+            if (c.name.startsWith(name)) {
                 result.add(c)
             }
         }
