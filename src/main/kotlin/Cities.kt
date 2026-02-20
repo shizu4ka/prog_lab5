@@ -1,4 +1,5 @@
 import Collection.City
+import Collection.StandardOfLiving
 import java.math.BigInteger
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -34,6 +35,10 @@ object Cities {
     fun clearCollection() {
         cities.clear()
         println("Collection is empty")
+    }
+
+    fun addCity(city: City) {
+        cities.add(city)
     }
 
     fun updateElement(id: Long) {
@@ -104,5 +109,16 @@ object Cities {
             cities.add(newCity)
             println("City is created")
         }
+    }
+
+    fun filter_by_standard_of_living(standard: StandardOfLiving): Vector<City>? {
+        var result = Vector<City>()
+        for (c in cities) {
+            if (c.standardOfLiving == standard) {
+                result.add(c)
+            }
+        }
+        if (result.isNotEmpty()) return result
+        else return null
     }
 }

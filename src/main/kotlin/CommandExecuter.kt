@@ -1,3 +1,6 @@
+import Cities.cities
+import Collection.StandardOfLiving
+
 fun findCommand(command: String?) {
     if (command.equals("exit")) {
         exit()
@@ -11,7 +14,7 @@ fun findCommand(command: String?) {
         var result = CreateObject()
         try {
             var obj = result.createObject()
-            Cities.cities.add(obj)
+            Cities.addCity(obj)
             println("New city is created")
         } catch (e: Exception) {
             println("Error with add element")
@@ -60,6 +63,28 @@ fun findCommand(command: String?) {
         }
     } else if (command.equals("add_if_max")) {
         Cities.add_if_max()
+    } else if (command!!.matches("^filter_by_standard_of_living \\w+$".toRegex())) {
+        try {
+            var mas = command.split(' ')
+            var param = mas.last()
+            StandardOfLiving.values().forEach { enumValues ->
+                if (enumValues.toString().equals(param)) {
+                    var standard = enumValues
+                    var filtered_cities = Cities.filter_by_standard_of_living(standard)
+                    if (filtered_cities == null) print("No cities with this standard of living.")
+                    else {
+                        var string = ""
+                        for (c in filtered_cities) {
+                            string += c.toString() + "\n"
+                        }
+                        var result = PrintResult(String = string)
+                        result.printResult()
+                    }
+                }
+            }
+        } catch (e: Exception) {
+            println("Invalid standart")
+        }
     }
 }
 
