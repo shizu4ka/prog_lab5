@@ -3,6 +3,7 @@ import Collection.Climate
 import Collection.Coordinates
 import Collection.Human
 import Collection.StandardOfLiving
+import jdk.javadoc.internal.doclets.formats.html.markup.HtmlStyles
 import java.math.BigInteger
 import java.time.LocalDate
 
@@ -99,7 +100,7 @@ public class CreateObject {
                 } catch (e: NumberFormatException) {
                     println("Error: invalid number")
                 }
-            }
+            } else println("Error: invalid input")
         }
     }
 
@@ -114,7 +115,7 @@ public class CreateObject {
                 } catch (e: NumberFormatException) {
                     println("Error: invalid number")
                 }
-            }
+            } else println("Error: invalid input")
         }
     }
 
@@ -156,24 +157,19 @@ public class CreateObject {
         Climate.values().forEachIndexed { index, climate ->
             println("${index}. ${climate.name}")
         }
-        print("Select climate (number or leave empty): ")
-        var input = readlnOrNull()?.trim()
-        if (input.isNullOrEmpty()) {
-            return null
-        }
-        try {
-            val index = input.toInt()
-            if (index < Climate.values().size) {
-                return Climate.values()[index]
-            } else {
-                println("Error: enter a number")
-                climateRead()
+        while (true) {
+            print("Select climate (name or leave empty): ")
+            var input = readlnOrNull()?.trim()
+            if (input.isNullOrEmpty()) {
+                return null
             }
-        } catch (e: NumberFormatException) {
-            println("Error: enter a number")
-            climateRead()
+            Climate.values().forEach { climate ->
+                if (climate.toString().equals(input)) {
+                    return climate
+                }
+            }
+            println("Error: invalid climate")
         }
-        return null
     }
 
     private fun standardOfLivingRead(): StandardOfLiving? {
@@ -181,24 +177,19 @@ public class CreateObject {
         StandardOfLiving.values().forEachIndexed { index, standart ->
             println("${index}. ${standart.name}")
         }
-        print("Select standart (number or leave empty): ")
-        var input = readlnOrNull()?.trim()
-        if (input.isNullOrEmpty()) {
-            return null
-        }
-        try {
-            val index = input.toInt()
-            if (index < StandardOfLiving.values().size) {
-                return StandardOfLiving.values()[index]
-            } else {
-                println("Error: enter a number")
-                standardOfLivingRead()
+        while (true) {
+            print("Select standart (print name or leave empty): ")
+            var input = readlnOrNull()?.trim()
+            if (input.isNullOrEmpty()) {
+                return null
             }
-        } catch (e: NumberFormatException) {
-            println("Error: enter a number")
-            standardOfLivingRead()
+            StandardOfLiving.values().forEach { standart ->
+                if (standart.toString().equals(input)) {
+                    return standart
+                }
+            }
+            println("Invalid standardOfLiving")
         }
-        return null
     }
 
     private fun governorRead(): Human? {
