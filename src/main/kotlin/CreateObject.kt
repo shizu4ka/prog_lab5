@@ -11,12 +11,12 @@ import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
 
 
-public class AddObject {
+public class CreateObject {
 
     private val dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
     val nextId = if (Cities.cities.isEmpty()) 1L else Cities.cities.last().id + 1
 
-    fun addObject(): City {
+    fun createObject(): City {
         var id = nextId
         var name = nameRead()
         var coordinates = coordinatesRead()

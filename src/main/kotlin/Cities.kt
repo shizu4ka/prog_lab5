@@ -1,13 +1,12 @@
 import Collection.City
-import History.addHistory
-import jdk.javadoc.internal.doclets.formats.html.markup.HtmlStyles
+import java.math.BigInteger
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Vector
 
 object Cities {
     var cities = Vector<City>()
-
+    var maxPopulation: BigInteger = BigInteger.ZERO
     val initializationDate: LocalDateTime = LocalDateTime.now()
     val format = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss")
     fun getInfo(): PrintResult {
@@ -38,13 +37,13 @@ object Cities {
     }
 
     fun updateElement(id: Long) {
-        var AddObject = AddObject()
+        var CreateObject = CreateObject()
         try {
             var flag = false
             for (c in cities) {
                 if (id == c.id) {
                     var index: Int = cities.indexOf(c)
-                    cities[index] = AddObject.addObject()
+                    cities[index] = CreateObject.createObject()
                     println("Ubdate element by id: $id")
                     flag = true
                 }
@@ -78,7 +77,6 @@ object Cities {
             if (index < cities.size) {
                 cities.removeAt(index)
                 flag = true
-                println("Remove element by index: $index")
             }
             if (!flag) println("There is no item with this index in the collection.")
         } catch (e: Exception) {
@@ -86,11 +84,25 @@ object Cities {
         }
     }
 
-    fun removeLastElement(){
-        if (cities.isNotEmpty()){
-                cities.removeLast()
-                println("Remove element by last")
+    fun removeLastElement() {
+        if (cities.isNotEmpty()) {
+            cities.removeLast()
+        } else println("Collection is empty")
+    }
+
+    fun add_if_max() {
+        for (c in cities) {
+            if (maxPopulation < c.population) {
+                maxPopulation = c.population
+            }
         }
-        else println("Collection is empty")
+        var CreateObject = CreateObject()
+        var newCity = CreateObject.createObject()
+        if (newCity.population <= maxPopulation) {
+            println("Population is too small")
+        } else {
+            cities.add(newCity)
+            println("City is created")
+        }
     }
 }

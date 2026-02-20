@@ -1,5 +1,3 @@
-import Cities.cities
-
 fun findCommand(command: String?) {
     if (command.equals("exit")) {
         exit()
@@ -10,9 +8,9 @@ fun findCommand(command: String?) {
         var result = History.execute()
         result.printResult()
     } else if (command.equals("add")) {
-        var result = AddObject()
+        var result = CreateObject()
         try {
-            var obj = result.addObject()
+            var obj = result.createObject()
             Cities.cities.add(obj)
             println("New city is created")
         } catch (e: Exception) {
@@ -49,15 +47,19 @@ fun findCommand(command: String?) {
         try {
             var mas = command.split(' ')
             Cities.remove_at(mas.last().toInt())
+            println("Remove element by index: ${mas.last()}")
         } catch (e: Exception) {
             println("Error with removed, try again")
         }
     } else if (command.equals("remove_last")) {
         try {
             Cities.removeLastElement()
-        }catch (e:Exception){
+            println("Remove element by last")
+        } catch (e: Exception) {
             println("Error with remove element")
         }
+    } else if (command.equals("add_if_max")) {
+        Cities.add_if_max()
     }
 }
 
