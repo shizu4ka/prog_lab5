@@ -1,6 +1,7 @@
 import Cities.cities
 import Collection.Climate
 import Collection.StandardOfLiving
+import java.io.File
 import java.util.Vector
 
 fun findCommand(command: String?) {
@@ -122,9 +123,13 @@ fun findCommand(command: String?) {
         } catch (e: Exception) {
             println("Error with filter")
         }
+    } else if (command!!.matches("^execute_script \\w+$".toRegex())) {
+        var FileManager = FileManager()
+        var mas = command.split(' ')
+        var param = mas.last()
+        FileManager.execute_script(param)
     }
 }
-
 fun exit() {
     println("Exit")
     System.exit(0)

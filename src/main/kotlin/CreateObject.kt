@@ -3,7 +3,6 @@ import Collection.Climate
 import Collection.Coordinates
 import Collection.Human
 import Collection.StandardOfLiving
-import jdk.javadoc.internal.doclets.formats.html.markup.HtmlStyles
 import java.math.BigInteger
 import java.time.LocalDate
 
@@ -49,6 +48,7 @@ public class CreateObject {
             print("Enter city name: ")
             val input = readlnOrNull()?.trim()
             if (!input.isNullOrEmpty()) {
+                print("\n")
                 return input
             }
             println("Error: city name is not available")
@@ -65,6 +65,7 @@ public class CreateObject {
             if (!inputX.isNullOrEmpty()) {
                 try {
                     x = inputX.toLong()
+                    print("\n")
                 } catch (e: NumberFormatException) {
                     println("Error: invalid number")
                     continue
@@ -75,6 +76,7 @@ public class CreateObject {
             if (!inputY.isNullOrEmpty()) {
                 try {
                     y = inputY.toFloat()
+                    print("\n")
                 } catch (e: NumberFormatException) {
                     println("Error: invalid number")
                     continue
@@ -96,6 +98,7 @@ public class CreateObject {
             if (!input.isNullOrEmpty()) {
                 try {
                     var area = input.toDouble()
+                    print("\n")
                     return area
                 } catch (e: NumberFormatException) {
                     println("Error: invalid number")
@@ -111,6 +114,7 @@ public class CreateObject {
             if (!input.isNullOrEmpty()) {
                 try {
                     var population = input.toBigInteger()
+                    print("\n")
                     return population
                 } catch (e: NumberFormatException) {
                     println("Error: invalid number")
@@ -124,10 +128,12 @@ public class CreateObject {
             print("Enter meters: ")
             val input = readlnOrNull()?.trim()
             if (input == null || input == "") {
+                print("\n")
                 return null
             } else if (!input.isNullOrEmpty()) {
                 try {
                     var metersAboveSeaLevel = input.toFloat()
+                    print("\n")
                     return metersAboveSeaLevel
                 } catch (e: NumberFormatException) {
                     println("Error: invalid number")
@@ -144,6 +150,7 @@ public class CreateObject {
         } else {
             try {
                 var date = LocalDate.parse(input, dateFormatter)
+                print("\n")
                 return date
             } catch (e: DateTimeParseException) {
                 println("Error: invalid date format. Use yyyy-mm-dd")
@@ -161,10 +168,12 @@ public class CreateObject {
             print("Select climate (name or leave empty): ")
             var input = readlnOrNull()?.trim()
             if (input.isNullOrEmpty()) {
+                print("\n")
                 return null
             }
             Climate.values().forEach { climate ->
                 if (climate.toString().equals(input)) {
+                    print("\n")
                     return climate
                 }
             }
@@ -181,10 +190,12 @@ public class CreateObject {
             print("Select standart (print name or leave empty): ")
             var input = readlnOrNull()?.trim()
             if (input.isNullOrEmpty()) {
+                print("\n")
                 return null
             }
             StandardOfLiving.values().forEach { standart ->
                 if (standart.toString().equals(input)) {
+                    print("\n")
                     return standart
                 }
             }
@@ -196,10 +207,12 @@ public class CreateObject {
         print("Enter governor height (must be null): ")
         val input = readlnOrNull()?.trim()
         if (input.isNullOrEmpty()) {
+            print("\n")
             return null
         }
         try {
             var height = input.toDouble()
+            print("\n")
             return Human(height = height)
         } catch (e: NumberFormatException) {
             println("Error: enter a number")
