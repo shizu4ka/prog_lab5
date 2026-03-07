@@ -5,118 +5,157 @@ import Collections.StandardOfLiving
 import FileManager
 import PrintResult
 
-fun findCommand(command: String?) {
-    if (command.equals("exit")) {
-        exit()
-    } else if (command.equals("help")) {
-        val helpCommand = HelpCommand()
-        helpCommand.result.printResult()
-    } else if (command.equals("history")) {
-        var result = History.execute()
-        result.printResult()
-    } else if (command.equals("add")) {
-        var result = CreateObject()
-        try {
-            var obj = result.createObject()
-            Cities.addCity(obj)
-            println("New city is created")
-        } catch (e: Exception) {
-            println("Error with add element")
+class CommandHandler {
+    private val commands: HashMap<String, (String?) -> Unit> = hashMapOf()
+
+    init {
+        commands["exit"] = { exit() }
+        commands["help"] = {
+            val helpCommand = HelpCommand()
+            helpCommand.result.printResult()
         }
-    } else if (command.equals("info")) {
-        var result: PrintResult = Cities.getInfo()
-        result.printResult()
-    } else if (command.equals("show")) {
-        var result = Cities.getCollection()
-        result.printResult()
-    } else if (command.equals("clear")) {
-        try {
-            Cities.clearCollection()
-            println("Collection cleared")
-        } catch (e: Exception) {
-            println("Error with Clearing Cities")
+        commands["history"] = {
+            val result = History.execute()
+            result.printResult()
         }
-    } else if (command!!.matches("^update \\d+$".toRegex())) {
+        commands["add"] = {
+            val result = CreateObject()
+            try {
+                val obj = result.createObject()
+                Cities.addCity(obj)
+                println("New city is created")
+            } catch (e: Exception) {
+                println("Error with add element")
+            }
+        }
+        commands["info"] = {
+            val result: PrintResult = Cities.getInfo()
+            result.printResult()
+        }
+        commands["show"] = {
+            val result = Cities.getCollection()
+            result.printResult()
+        }
+        commands["clear"] = {
+            try {
+                Cities.clearCollection()
+                println("Collection cleared")
+            } catch (e: Exception) {
+                println("Error with Clearing Cities")
+            }
+        }
+        commands["remove_last"] = {
+            try {
+                Cities.removeLastElement()
+                println("Remove element by last")
+            } catch (e: Exception) {
+                println("Error with remove element")
+            }
+        }
+        commands["add_if_max"] = {
+            Cities.add_if_max()
+        }
+        commands["save"] = {
+            val fileManager = FileManager()
+            fileManager.save()
+        }
+    }
+    fun findCommand(command: String?) {
+        if (command.isNullOrBlank()) return
+
+        // Проверяем команды с параметрами
+        when {
+            command.matches("^update \\d+$".toRegex()) -> handleUpdate(command)
+            command.matches("^remove_by_id \\d+$".toRegex()) -> handleRemoveById(command)
+            command.matches("^remove_at \\d+$".toRegex()) -> handleRemoveAt(command)
+            command.matches("^filter_by_standard_of_living \\w+$".toRegex()) -> handleFilterByStandard(command)
+            command.matches("^filter_starts_with_name \\w+$".toRegex()) -> handleFilterStartsWithName(command)
+            command.matches("^filter_greater_than_climate \\w+$".toRegex()) -> handleFilterGreaterThanClimate(command)
+            command.matches("^execute_script \\w+$".toRegex()) -> handleExecuteScript(command)
+            else -> {
+                val handler = commands[command]
+                if (handler != null) {
+                    handler(command)
+                }
+            }
+        }
+    }
+    private fun handleUpdate(command: String) {
         try {
-            var mas = command.split(' ')
+            val mas = command.split(' ')
             Cities.updateElement(mas.last().toLong())
         } catch (e: Exception) {
             println("Error with id")
         }
-    } else if (command!!.matches("^remove_by_id \\d+$".toRegex())) {
+    }
+
+    private fun handleRemoveById(command: String) {
         try {
-            var mas = command.split(' ')
+            val mas = command.split(' ')
             Cities.remove_by_id(mas.last().toLong())
         } catch (e: Exception) {
             println("Error with removed, try again")
         }
-    } else if (command!!.matches("^remove_at \\d+$".toRegex())) {
+    }
+
+    private fun handleRemoveAt(command: String) {
         try {
-            var mas = command.split(' ')
+            val mas = command.split(' ')
             Cities.remove_at(mas.last().toInt())
             println("Remove element by index: ${mas.last()}")
         } catch (e: Exception) {
             println("Error with removed, try again")
         }
-    } else if (command.equals("remove_last")) {
+    }
+
+    private fun handleFilterByStandard(command: String) {
         try {
-            Cities.removeLastElement()
-            println("Remove element by last")
-        } catch (e: Exception) {
-            println("Error with remove element")
-        }
-    } else if (command.equals("add_if_max")) {
-        Cities.add_if_max()
-    } else if (command!!.matches("^filter_by_standard_of_living \\w+$".toRegex())) {
-        try {
-            var mas = command.split(' ')
-            var param = mas.last()
+            val mas = command.split(' ')
+            val param = mas.last()
             StandardOfLiving.values().forEach { enumValues ->
-                if (enumValues.toString().equals(param)) {
-                    var standard = enumValues
-                    var filtered_cities = Cities.filter_by_standard_of_living(standard)
-                    if (filtered_cities == null) print("No cities with this standard of living.")
-                    else {
-                        var string = ""
-                        for (c in filtered_cities) {
-                            string += c.toString() + "\n"
-                        }
-                        var result = PrintResult(String = string)
+                if (enumValues.toString().equals(param, ignoreCase = true)) {
+                    val standard = enumValues
+                    val filteredCities = Cities.filter_by_standard_of_living(standard)
+                    if (filteredCities == null) {
+                        print("No cities with this standard of living.")
+                    } else {
+                        val string = filteredCities.joinToString("\n") { it.toString() }
+                        val result = PrintResult(String = string)
                         result.printResult()
                     }
                 }
             }
         } catch (e: Exception) {
-            println("Invalid standart")
+            println("Invalid standard")
         }
-    } else if (command!!.matches("^filter_starts_with_name \\w+$".toRegex())) {
-        var mas = command.split(' ')
-        var param = mas.last()
-        var result = Cities.filter_starts_with_name(param)
-        if (result == null) println("There is no city starting with that name.")
-        else {
-            var string = ""
-            for (c in result) {
-                string += c.toString() + "\n"
-            }
-            var result = PrintResult(String = string)
-            result.printResult()
+    }
+
+    private fun handleFilterStartsWithName(command: String) {
+        val mas = command.split(' ')
+        val param = mas.last()
+        val result = Cities.filter_starts_with_name(param)
+        if (result == null) {
+            println("There is no city starting with that name.")
+        } else {
+            val string = result.joinToString("\n") { it.toString() }
+            val printResult = PrintResult(String = string)
+            printResult.printResult()
         }
-    } else if (command!!.matches("^filter_greater_than_climate \\w+$".toRegex())) {
+    }
+
+    private fun handleFilterGreaterThanClimate(command: String) {
         try {
-            var mas = command.split(' ')
-            var param = mas.last()
+            val mas = command.split(' ')
+            val param = mas.last()
             Climate.values().forEach { enumValues ->
-                if (enumValues.toString().equals(param)) {
-                    var climate = enumValues
-                    var filtered_cities = Cities.filter_greater_than_climate(climate)
-                    if (filtered_cities == null) print("No cities with this climate")
-                    else {
-                        var string = ""
-                        for (c in filtered_cities) {
-                            string += c.toString() + "\n"
-                        }
-                        var result = PrintResult(String = string)
+                if (enumValues.toString().equals(param, ignoreCase = true)) {
+                    val climate = enumValues
+                    val filteredCities = Cities.filter_greater_than_climate(climate)
+                    if (filteredCities == null) {
+                        print("No cities with this climate")
+                    } else {
+                        val string = filteredCities.joinToString("\n") { it.toString() }
+                        val result = PrintResult(String = string)
                         result.printResult()
                     }
                 }
@@ -124,18 +163,27 @@ fun findCommand(command: String?) {
         } catch (e: Exception) {
             println("Error with filter")
         }
-    } else if (command!!.matches("^execute_script \\w+$".toRegex())) {
-        var FileManager = FileManager()
-        var mas = command.split(' ')
-        var param = mas.last()
-        FileManager.execute_script(param)
     }
-    else if (command.equals("save")){
-        var FileManager = FileManager()
-        FileManager.save()
+
+    private fun handleExecuteScript(command: String) {
+        val fileManager = FileManager()
+        val mas = command.split(' ')
+        val param = mas.last()
+        fileManager.execute_script(param)
+    }
+
+    fun exit() {
+        println("Exit")
+        System.exit(0)
     }
 }
+
+private val handler = CommandHandler()
+
+fun findCommand(command: String?) {
+    handler.findCommand(command)
+}
+
 fun exit() {
-    println("Exit")
-    System.exit(0)
+    handler.exit()
 }
