@@ -1,8 +1,9 @@
-import Cities.cities
-import Collection.Climate
-import Collection.StandardOfLiving
-import java.io.File
-import java.util.Vector
+package command
+
+import Collections.Climate
+import Collections.StandardOfLiving
+import FileManager
+import PrintResult
 
 fun findCommand(command: String?) {
     if (command.equals("exit")) {
@@ -128,6 +129,10 @@ fun findCommand(command: String?) {
         var mas = command.split(' ')
         var param = mas.last()
         FileManager.execute_script(param)
+    }
+    else if (command.equals("save")){
+        var FileManager = FileManager()
+        FileManager.save()
     }
 }
 fun exit() {

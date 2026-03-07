@@ -1,4 +1,4 @@
-package Collection
+package Collections
 
 import java.math.BigInteger
 import java.time.LocalDate

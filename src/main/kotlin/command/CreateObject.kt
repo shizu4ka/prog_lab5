@@ -1,15 +1,15 @@
-import Collection.City;
-import Collection.Climate
-import Collection.Coordinates
-import Collection.Human
-import Collection.StandardOfLiving
+package command
+
+import Collections.City
+import Collections.Climate
+import Collections.Coordinates
+import Collections.Human
+import Collections.StandardOfLiving
 import java.math.BigInteger
 import java.time.LocalDate
-
-import java.time.LocalDateTime;
+import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
-
 
 public class CreateObject {
 
@@ -72,9 +72,10 @@ public class CreateObject {
                 }
             }
             print("Enter y: ")
-            val inputY = readlnOrNull()?.trim()
-            if (!inputY.isNullOrEmpty()) {
+            val str = readlnOrNull()?.trim()
+            if (!str.isNullOrEmpty()) {
                 try {
+                    val inputY = str.replace(',', '.')
                     y = inputY.toFloat()
                     print("\n")
                 } catch (e: NumberFormatException) {
@@ -161,7 +162,7 @@ public class CreateObject {
 
     private fun climateRead(): Climate? {
         println("Available climate types:")
-        Climate.values().forEachIndexed { index, climate ->
+        Collections.Climate.values().forEachIndexed { index, climate ->
             println("${index}. ${climate.name}")
         }
         while (true) {
@@ -171,7 +172,7 @@ public class CreateObject {
                 print("\n")
                 return null
             }
-            Climate.values().forEach { climate ->
+            Collections.Climate.values().forEach { climate ->
                 if (climate.toString().equals(input)) {
                     print("\n")
                     return climate
@@ -183,7 +184,7 @@ public class CreateObject {
 
     private fun standardOfLivingRead(): StandardOfLiving? {
         println("Available standardOfLiving types:")
-        StandardOfLiving.values().forEachIndexed { index, standart ->
+        Collections.StandardOfLiving.values().forEachIndexed { index, standart ->
             println("${index}. ${standart.name}")
         }
         while (true) {
@@ -193,7 +194,7 @@ public class CreateObject {
                 print("\n")
                 return null
             }
-            StandardOfLiving.values().forEach { standart ->
+            Collections.StandardOfLiving.values().forEach { standart ->
                 if (standart.toString().equals(input)) {
                     print("\n")
                     return standart

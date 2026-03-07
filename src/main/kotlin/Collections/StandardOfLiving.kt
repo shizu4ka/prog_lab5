@@ -1,4 +1,4 @@
-package Collection
+package Collections
 
 enum class StandardOfLiving {
     VERY_HIGH,

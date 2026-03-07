@@ -1,4 +1,4 @@
-package Collection
+package Collections
 
 data class Coordinates(
     val x: Long, // Must be > -256, non-null

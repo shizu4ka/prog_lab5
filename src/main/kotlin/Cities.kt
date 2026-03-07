@@ -1,6 +1,7 @@
-import Collection.City
-import Collection.Climate
-import Collection.StandardOfLiving
+import Collections.City
+import Collections.Climate
+import Collections.StandardOfLiving
+import command.CreateObject
 import java.math.BigInteger
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter

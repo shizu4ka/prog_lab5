@@ -1,4 +1,4 @@
-package Collection
+package Collections
 
 enum class Climate {
     RAIN_FOREST,

@@ -1,4 +1,4 @@
-package Collection
+package Collections
 
 data class Human(
     val height: Double // Must be > 0

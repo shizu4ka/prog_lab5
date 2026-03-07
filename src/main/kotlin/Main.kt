@@ -1,4 +1,5 @@
 import History.addHistory
+import command.findCommand
 
 fun main(args: Array<String>) {
 

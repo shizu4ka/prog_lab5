@@ -1,4 +1,6 @@
-import History.history
+package command
+
+import PrintResult
 
 class HelpCommand : Command {
     val info =
@@ -11,7 +13,7 @@ class HelpCommand : Command {
     "clear : clear the collection\n" +
     "save : save the collection to a file\n" +
     "execute_script file_name : read and execute a script from the specified file. The script contains commands in the same format as entered by the user in interactive mode.\n" +
-    "exit : terminate the program (without saving to file)\n" +
+    "command.exit : terminate the program (without saving to file)\n" +
     "insert_at index {element} : insert a new element at the specified position\n" +
     "remove_first : remove the first element from the collection\n" +
     "history : display the last 8 commands (without their arguments)\n" +
