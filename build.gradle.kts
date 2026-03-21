@@ -1,5 +1,15 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 plugins {
     kotlin("jvm") version "2.3.0"
+    id("com.gradleup.shadow") version "9.4.0"
+}
+tasks.withType<ShadowJar> {
+    manifest {
+        attributes["Main-Class"] = "MainKt"
+    }
+    // Название готового файла
+    archiveBaseName.set("my-project")
+    archiveClassifier.set("all")
 }
 
 group = "org.example"
