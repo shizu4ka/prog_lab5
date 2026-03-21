@@ -1,224 +1,129 @@
 package command
 
-import Collections.City
-import Collections.Climate
-import Collections.Coordinates
-import Collections.Human
-import Collections.StandardOfLiving
+import Collections.*
 import java.math.BigInteger
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
+import java.util.Scanner
 
-public class CreateObject {
-
+public class CreateObject(
+    private val scanner: Scanner,
+    private val nextId: Long
+) {
     private val dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-    val nextId = if (Cities.cities.isEmpty()) 1L else Cities.cities.last().id + 1
 
     fun createObject(): City {
-        var id = nextId
-        var name = nameRead()
-        var coordinates = coordinatesRead()
-        var creationDate = LocalDateTime.now()
-        var area = readArea()
-        var population: BigInteger = populationRead()
-        var metersAboveSeaLevel: Float? = metersAboveSeaLevelRead()
-        var establishmentDate = establishmentDateRead()
-        var climate = climateRead()
-        var standardOfLiving = standardOfLivingRead()
-        var governor = governorRead()
         return City(
-            id = id,
-            name = name,
-            coordinates = coordinates,
-            creationDate = creationDate,
-            area = area,
-            population = population,
-            metersAboveSeaLevel = metersAboveSeaLevel,
-            establishmentDate = establishmentDate,
-            climate = climate,
-            standardOfLiving = standardOfLiving,
-            governor = governor
+            id = nextId,
+            name = nameRead(),
+            coordinates = coordinatesRead(),
+            creationDate = LocalDateTime.now(),
+            area = readArea(),
+            population = populationRead(),
+            metersAboveSeaLevel = metersAboveSeaLevelRead(),
+            establishmentDate = establishmentDateRead(),
+            climate = readEnum<Climate>("climate"),
+            standardOfLiving = readEnum<StandardOfLiving>("standard of living"),
+            governor = governorRead()
         )
     }
 
     private fun nameRead(): String {
         while (true) {
             print("Enter city name: ")
-            val input = readlnOrNull()?.trim()
-            if (!input.isNullOrEmpty()) {
-                print("\n")
-                return input
-            }
-            println("Error: city name is not available")
+            val input = if (scanner.hasNextLine()) scanner.nextLine().trim() else ""
+            if (input.isNotEmpty()) return input
+            println("Error: Name cannot be empty.")
         }
     }
 
     private fun coordinatesRead(): Coordinates {
-        print("Enter city coordinates:\n")
-        while (true) {
-            var x: Long? = null
-            var y: Float? = null
-            print("Enter x: ")
-            val inputX = readlnOrNull()?.trim()
-            if (!inputX.isNullOrEmpty()) {
-                try {
-                    x = inputX.toLong()
-                    print("\n")
-                } catch (e: NumberFormatException) {
-                    println("Error: invalid number")
-                    continue
-                }
-            }
-            print("Enter y: ")
-            val str = readlnOrNull()?.trim()
-            if (!str.isNullOrEmpty()) {
-                try {
-                    val inputY = str.replace(',', '.')
-                    y = inputY.toFloat()
-                    print("\n")
-                } catch (e: NumberFormatException) {
-                    println("Error: invalid number")
-                    continue
-                }
-            }
-            if (x != null && y != null) {
-                var cordinates = Coordinates(x = x, y = y)
-                return cordinates
-            } else {
-                println("Error: invalid coordinates")
-            }
+        println("Enter city coordinates:")
+        var x: Long? = null
+        while (x == null) {
+            print("Enter x (Long): ")
+            val input = if (scanner.hasNextLine()) scanner.nextLine().trim() else ""
+            x = input.toLongOrNull()
+            if (x == null) println("Error: Invalid number format for x.")
         }
+
+        var y: Float? = null
+        while (y == null) {
+            print("Enter y (Float): ")
+            val input = if (scanner.hasNextLine()) scanner.nextLine().trim().replace(',', '.') else ""
+            y = input.toFloatOrNull()
+            if (y == null) println("Error: Invalid number format for y.")
+        }
+        return Coordinates(x = x, y = y)
     }
 
     private fun readArea(): Double {
         while (true) {
-            print("Enter area: ")
-            val input = readlnOrNull()?.trim()
-            if (!input.isNullOrEmpty()) {
-                try {
-                    var area = input.toDouble()
-                    print("\n")
-                    return area
-                } catch (e: NumberFormatException) {
-                    println("Error: invalid number")
-                }
-            } else println("Error: invalid input")
+            print("Enter area (Double > 0): ")
+            val input = if (scanner.hasNextLine()) scanner.nextLine().trim() else ""
+            val area = input.toDoubleOrNull()
+            if (area != null && area > 0) return area
+            println("Error: Area must be a positive number.")
         }
     }
 
     private fun populationRead(): BigInteger {
         while (true) {
-            print("Enter population: ")
-            val input = readlnOrNull()?.trim()
-            if (!input.isNullOrEmpty()) {
-                try {
-                    var population = input.toBigInteger()
-                    print("\n")
-                    return population
-                } catch (e: NumberFormatException) {
-                    println("Error: invalid number")
-                }
-            } else println("Error: invalid input")
+            print("Enter population (BigInteger > 0): ")
+            val input = if (scanner.hasNextLine()) scanner.nextLine().trim() else ""
+            val pop = try { BigInteger(input) } catch (e: Exception) { null }
+            if (pop != null && pop > BigInteger.ZERO) return pop
+            println("Error: Population must be a positive integer.")
         }
     }
 
     private fun metersAboveSeaLevelRead(): Float? {
         while (true) {
-            print("Enter meters: ")
-            val input = readlnOrNull()?.trim()
-            if (input == null || input == "") {
-                print("\n")
-                return null
-            } else if (!input.isNullOrEmpty()) {
-                try {
-                    var metersAboveSeaLevel = input.toFloat()
-                    print("\n")
-                    return metersAboveSeaLevel
-                } catch (e: NumberFormatException) {
-                    println("Error: invalid number")
-                }
-            }
+            print("Enter meters above sea level (or leave empty for null): ")
+            val input = if (scanner.hasNextLine()) scanner.nextLine().trim() else ""
+            if (input.isEmpty()) return null
+            val meters = input.toFloatOrNull()
+            if (meters != null) return meters
+            println("Error: Invalid format. Enter a number or leave empty.")
         }
     }
 
     private fun establishmentDateRead(): LocalDate? {
-        print("Enter establishment date (yyyy-mm-dd) or leave empty: ")
-        val input = readlnOrNull()?.trim()
-        return if (input.isNullOrEmpty()) {
-            null
-        } else {
+        while (true) {
+            print("Enter establishment date (yyyy-MM-dd) or leave empty: ")
+            val input = if (scanner.hasNextLine()) scanner.nextLine().trim() else ""
+            if (input.isEmpty()) return null
             try {
-                var date = LocalDate.parse(input, dateFormatter)
-                print("\n")
-                return date
+                return LocalDate.parse(input, dateFormatter)
             } catch (e: DateTimeParseException) {
-                println("Error: invalid date format. Use yyyy-mm-dd")
-                establishmentDateRead()
+                println("Error: Use yyyy-MM-dd format (e.g., 2023-10-25).")
             }
         }
     }
 
-    private fun climateRead(): Climate? {
-        println("Available climate types:")
-        Collections.Climate.values().forEachIndexed { index, climate ->
-            println("${index}. ${climate.name}")
-        }
+    private inline fun <reified T : Enum<T>> readEnum(typeName: String): T? {
+        val values = enumValues<T>()
+        println("Available $typeName types: ${values.joinToString { it.name }}")
         while (true) {
-            print("Select climate (name or leave empty): ")
-            var input = readlnOrNull()?.trim()
-            if (input.isNullOrEmpty()) {
-                print("\n")
-                return null
-            }
-            Collections.Climate.values().forEach { climate ->
-                if (climate.toString().equals(input)) {
-                    print("\n")
-                    return climate
-                }
-            }
-            println("Error: invalid climate")
-        }
-    }
-
-    private fun standardOfLivingRead(): StandardOfLiving? {
-        println("Available standardOfLiving types:")
-        Collections.StandardOfLiving.values().forEachIndexed { index, standart ->
-            println("${index}. ${standart.name}")
-        }
-        while (true) {
-            print("Select standart (print name or leave empty): ")
-            var input = readlnOrNull()?.trim()
-            if (input.isNullOrEmpty()) {
-                print("\n")
-                return null
-            }
-            Collections.StandardOfLiving.values().forEach { standart ->
-                if (standart.toString().equals(input)) {
-                    print("\n")
-                    return standart
-                }
-            }
-            println("Invalid standardOfLiving")
+            print("Select $typeName (name or leave empty): ")
+            val input = if (scanner.hasNextLine()) scanner.nextLine().trim().uppercase() else ""
+            if (input.isEmpty()) return null
+            val match = values.find { it.name == input }
+            if (match != null) return match
+            println("Error: '$input' is not a valid $typeName.")
         }
     }
 
     private fun governorRead(): Human? {
-        print("Enter governor height (must be null): ")
-        val input = readlnOrNull()?.trim()
-        if (input.isNullOrEmpty()) {
-            print("\n")
-            return null
+        while (true) {
+            print("Enter governor height (Double > 0) or leave empty for null: ")
+            val input = if (scanner.hasNextLine()) scanner.nextLine().trim() else ""
+            if (input.isEmpty()) return null
+            val height = input.toDoubleOrNull()
+            if (height != null && height > 0) return Human(height = height)
+            println("Error: Height must be a positive number.")
         }
-        try {
-            var height = input.toDouble()
-            print("\n")
-            return Human(height = height)
-        } catch (e: NumberFormatException) {
-            println("Error: enter a number")
-            governorRead()
-        }
-        return null
     }
 }

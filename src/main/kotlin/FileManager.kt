@@ -14,6 +14,7 @@ import java.beans.XMLEncoder
 import java.io.FileOutputStream
 import java.io.IOException
 import java.io.InputStreamReader
+import java.util.Scanner
 
 class FileManager {
     @JacksonXmlRootElement(localName = "cities")
@@ -28,26 +29,27 @@ class FileManager {
         .build()
 
     fun execute_script(scriptFile: String) {
-        val originalIn = System.`in`
-        val fileStream = FileInputStream(scriptFile)
-        val reader = InputStreamReader(fileStream, Charsets.UTF_8)
-        val bufferedReader = BufferedReader(reader)
-        System.setIn(FileInputStream(scriptFile))
+        val file = java.io.File(scriptFile)
+        if (!file.exists()) {
+            println("Script file not found")
+            return
+        }
+
+        val scriptScanner = Scanner(file)
+        println("Running script: $scriptFile")
+
         try {
-            var line: String? = ""
-            while (line != null) {
-                line = bufferedReader.readLine()
-                findCommand(line)
+            while (scriptScanner.hasNextLine()) {
+                val line = scriptScanner.nextLine().trim()
+                if (line.isEmpty()) continue
+
+                findCommand(line, scriptScanner)
             }
         } catch (e: Exception) {
-            println("Script is ended")
+            println("Error during script execution: ${e.message}")
         } finally {
-            System.setIn(originalIn)
-            try {
-                bufferedReader?.close()
-            } catch (e: IOException) {
-                println("something went wrong")
-            }
+            scriptScanner.close()
+            println("Script execution finished")
         }
     }
 

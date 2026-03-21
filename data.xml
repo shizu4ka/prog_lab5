@@ -2,55 +2,25 @@
   <cities>
     <cities>
       <id>1</id>
-      <name>add</name>
+      <name>qwe</name>
       <coordinates>
-        <x>1</x>
-        <y>2.0</y>
+        <x>4</x>
+        <y>4.6</y>
       </coordinates>
       <creationDate>2026</creationDate>
       <creationDate>3</creationDate>
       <creationDate>7</creationDate>
-      <creationDate>14</creationDate>
-      <creationDate>53</creationDate>
-      <creationDate>51</creationDate>
-      <creationDate>782666800</creationDate>
-      <area>3.0</area>
-      <population>4</population>
-      <metersAboveSeaLevel>5.0</metersAboveSeaLevel>
-      <establishmentDate>1111</establishmentDate>
-      <establishmentDate>11</establishmentDate>
-      <establishmentDate>11</establishmentDate>
+      <creationDate>15</creationDate>
+      <creationDate>54</creationDate>
+      <creationDate>42</creationDate>
+      <creationDate>275705400</creationDate>
+      <area>45.0</area>
+      <population>65</population>
+      <metersAboveSeaLevel>76.0</metersAboveSeaLevel>
+      <establishmentDate/>
       <climate>RAIN_FOREST</climate>
-      <standardOfLiving>VERY_HIGH</standardOfLiving>
-      <governor>
-        <height>6.0</height>
-      </governor>
-    </cities>
-    <cities>
-      <id>2</id>
-      <name>add</name>
-      <coordinates>
-        <x>12</x>
-        <y>22.0</y>
-      </coordinates>
-      <creationDate>2026</creationDate>
-      <creationDate>3</creationDate>
-      <creationDate>7</creationDate>
-      <creationDate>14</creationDate>
-      <creationDate>53</creationDate>
-      <creationDate>51</creationDate>
-      <creationDate>792692000</creationDate>
-      <area>32.0</area>
-      <population>42</population>
-      <metersAboveSeaLevel>52.0</metersAboveSeaLevel>
-      <establishmentDate>1111</establishmentDate>
-      <establishmentDate>11</establishmentDate>
-      <establishmentDate>11</establishmentDate>
-      <climate>RAIN_FOREST</climate>
-      <standardOfLiving>VERY_HIGH</standardOfLiving>
-      <governor>
-        <height>6.0</height>
-      </governor>
+      <standardOfLiving/>
+      <governor/>
     </cities>
   </cities>
 </cities>

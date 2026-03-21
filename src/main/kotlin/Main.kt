@@ -1,14 +1,17 @@
 import History.addHistory
 import command.findCommand
+import java.util.Scanner
 
 fun main(args: Array<String>) {
+    val sc = Scanner(System.`in`)
 
     while (true) {
-        var command = readLine()?.trim()
-        if (command == null || command == "") {
-            continue
-        }
+        if (!sc.hasNextLine()) break
+        val command = sc.nextLine().trim()
+
+        if (command.isEmpty()) continue
+
         addHistory(command)
-        findCommand(command)
+        findCommand(command, sc)
     }
 }
