@@ -1,0 +1,26 @@
+<cities>
+  <cities>
+    <cities>
+      <id>1</id>
+      <name>qwe</name>
+      <coordinates>
+        <x>4</x>
+        <y>4.6</y>
+      </coordinates>
+      <creationDate>2026</creationDate>
+      <creationDate>3</creationDate>
+      <creationDate>7</creationDate>
+      <creationDate>15</creationDate>
+      <creationDate>54</creationDate>
+      <creationDate>42</creationDate>
+      <creationDate>275705400</creationDate>
+      <area>45.0</area>
+      <population>65</population>
+      <metersAboveSeaLevel>76.0</metersAboveSeaLevel>
+      <establishmentDate/>
+      <climate>RAIN_FOREST</climate>
+      <standardOfLiving/>
+      <governor/>
+    </cities>
+  </cities>
+</cities>
