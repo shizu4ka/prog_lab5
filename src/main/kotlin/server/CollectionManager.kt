@@ -18,6 +18,8 @@ class CollectionManager {
      */
     fun getNextId(): Long = nextId++
 
+
+    fun getCities(): List<City> = cities.toList()
     /**
      * Add city to collection
      */

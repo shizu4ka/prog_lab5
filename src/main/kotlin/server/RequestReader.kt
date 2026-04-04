@@ -1,27 +1,33 @@
 package server
 
 import common.Command
-import common.Protocol
 import common.Serializer
 import java.io.DataInputStream
+import java.io.IOException
 
 /**
- * Module for reading requests from client
- * Reads binary serialized Command objects
+ * Module for reading commands from client through TCP
  */
 class RequestReader {
+
     /**
      * Read command from input stream
      */
     fun readRequest(input: DataInputStream): Command? {
         return try {
-            val length = Protocol.readMessageLength(input)
+            // Read message length (first 4 bytes)
+            val length = input.readInt()
+
             if (length <= 0) return null
-            
-            val data = Protocol.readBytes(input, length)
+
+            // Read message data
+            val data = ByteArray(length)
+            input.readFully(data)
+
+            // Deserialize to Command object
             Serializer.deserialize<Command>(data)
-        } catch (e: Exception) {
-            println("Error reading request: ${'\'}${'{'}.e.message${'\'}${'}'}")
+        } catch (e: IOException) {
+            println("Error reading request: ${e.message}")
             null
         }
     }

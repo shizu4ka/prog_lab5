@@ -63,8 +63,8 @@ class CommandProcessor {
      * Process Info command - display collection info
      */
     private fun processInfo(collectionManager: CollectionManager): Response {
-        val size = collectionManager.getCities().size
-        val creationDate = LocalDateTime.now()
+        val size = collectionManager.getSize()
+        val creationDate = collectionManager.initializationDate
         val message = "Collection info:\nSize: $size\nType: Vector<City>\nCreation date: $creationDate"
         return Response(true, message)
     }
@@ -77,8 +77,8 @@ class CommandProcessor {
         return if (cities.isEmpty()) {
             Response(true, "Collection is empty")
         } else {
-            val result = cities.joinToString("\n---\n")
-            Response(true, result, cities)
+            val result = cities.joinToString("\n---\n") { it.toString() }
+            Response(true, result, Vector(cities))
         }
     }
 
@@ -156,12 +156,12 @@ class CommandProcessor {
 
     /**
      * Process AddIfMax command - add city if its area is maximum
-     * Uses Stream API with maxOf()
+     * Uses Stream API with maxOfOrNull()
      */
     private fun processAddIfMax(command: Command.AddIfMax, collectionManager: CollectionManager): Response {
         return try {
-            val cities = collectionManager.getCities()
-            val maxArea = cities.maxOfOrNull { it.area } ?: 0.0
+            val allCities = collectionManager.getCities()
+            val maxArea = allCities.maxOfOrNull { it.area } ?: 0.0
 
             if (command.city.area > maxArea) {
                 collectionManager.addCity(command.city)
@@ -183,14 +183,12 @@ class CommandProcessor {
         collectionManager: CollectionManager
     ): Response {
         return try {
-            val filtered = collectionManager.getCities()
-                .filter { it.standardOfLiving == command.standard }
-                .sortedBy { it.area }
+            val filtered = collectionManager.filterByStandardOfLiving(command.standard)
 
             return if (filtered.isEmpty()) {
                 Response(true, "No cities found with standard of living ${command.standard}")
             } else {
-                val result = filtered.joinToString("\n---\n")
+                val result = filtered.joinToString("\n---\n") { it.toString() }
                 Response(true, result, Vector(filtered))
             }
         } catch (e: Exception) {
@@ -202,16 +200,17 @@ class CommandProcessor {
      * Process FilterStartsWithName command
      * Uses Stream API with filter()
      */
-    private fun processFilterStartsWithName(command: Command.FilterStartsWithName, collectionManager: CollectionManager): Response {
+    private fun processFilterStartsWithName(
+        command: Command.FilterStartsWithName,
+        collectionManager: CollectionManager
+    ): Response {
         return try {
-            val filtered = collectionManager.getCities()
-                .filter { it.name.startsWith(command.name, ignoreCase = true) }
-                .sortedBy { it.area }
+            val filtered = collectionManager.filterStartsWithName(command.name)
 
             return if (filtered.isEmpty()) {
                 Response(true, "No cities found starting with '${command.name}'")
             } else {
-                val result = filtered.joinToString("\n---\n")
+                val result = filtered.joinToString("\n---\n") { it.toString() }
                 Response(true, result, Vector(filtered))
             }
         } catch (e: Exception) {
@@ -223,16 +222,17 @@ class CommandProcessor {
      * Process FilterGreaterThanClimate command
      * Uses Stream API with filter() and compareTo()
      */
-    private fun processFilterGreaterThanClimate(command: Command.FilterGreaterThanClimate, collectionManager: CollectionManager): Response {
+    private fun processFilterGreaterThanClimate(
+        command: Command.FilterGreaterThanClimate,
+        collectionManager: CollectionManager
+    ): Response {
         return try {
-            val filtered = collectionManager.getCities()
-                .filter { it.climate != null && it.climate.compareTo(command.climate) > 0 }
-                .sortedBy { it.area }
+            val filtered = collectionManager.filterGreaterThanClimate(command.climate)
 
             return if (filtered.isEmpty()) {
                 Response(true, "No cities found with climate greater than ${command.climate}")
             } else {
-                val result = filtered.joinToString("\n---\n")
+                val result = filtered.joinToString("\n---\n") { it.toString() }
                 Response(true, result, Vector(filtered))
             }
         } catch (e: Exception) {

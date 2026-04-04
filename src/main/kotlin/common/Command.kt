@@ -6,14 +6,15 @@ import java.io.Serializable
  * Sealed class representing all possible commands that can be sent from client to server
  */
 sealed class Command : Serializable {
+
     /** Help command - display available commands */
-    data class Help : Command()
+    class Help : Command()
 
     /** Info command - display collection information */
-    data class Info : Command()
+    class Info : Command()
 
     /** Show command - display all elements in collection */
-    data class Show : Command()
+    class Show : Command()
 
     /** Add command - add new city to collection */
     data class Add(val city: City) : Command()
@@ -28,10 +29,10 @@ sealed class Command : Serializable {
     data class RemoveAt(val index: Int) : Command()
 
     /** RemoveLast command - remove last city from collection */
-    data class RemoveLast : Command()
+    class RemoveLast : Command()
 
     /** Clear command - clear entire collection */
-    data class Clear : Command()
+    class Clear : Command()
 
     /** AddIfMax command - add city if its area is maximum */
     data class AddIfMax(val city: City) : Command()
@@ -49,8 +50,8 @@ sealed class Command : Serializable {
     data class ExecuteScript(val fileName: String) : Command()
 
     /** Exit command - terminate client */
-    data class Exit : Command()
+    class Exit : Command()
 
     /** Save command - save collection to file (server only) */
-    data class Save : Command()
+    class Save : Command()
 }
