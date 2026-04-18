@@ -54,7 +54,7 @@ fun main() {
             "remove_last" -> Command.RemoveLast()
             "clear" -> Command.Clear()
             "add_if_max" -> commandBuilder.buildAddCommand().let { Command.AddIfMax((it as Command.Add).city) }
-            "filter_by_standard" -> {
+            "filter_by_standard_of_living" -> {
                 if (input.size < 2) {
                     println("Usage: filter_by_standard <standard>")
                     continue
@@ -92,8 +92,16 @@ fun main() {
                 }
                 Command.ExecuteScript(input.drop(1).joinToString(" "))
             }
-            "exit" -> Command.Exit()
-            "save" -> Command.Save()
+            "exit" -> {
+                client.sendCommand(Command.Save())
+                val saveResponse = client.receiveResponse()
+                if (saveResponse != null) {
+                    println(saveResponse.message)
+                }
+                println("Goodbye!")
+                client.disconnect()
+                return
+            }
             else -> {
                 println("Unknown command. Type 'help' for available commands.")
                 continue
@@ -105,13 +113,6 @@ fun main() {
 
         if (response != null) {
             println(response.message)
-            if (response.data != null) {
-                println("Data: ${response.data}")
-            }
         }
-
-        if (input[0].lowercase() == "exit") break
     }
-
-    client.disconnect()
 }

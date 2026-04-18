@@ -28,7 +28,7 @@ class CommandProcessor {
             is Command.FilterByStandardOfLiving -> processFilterByStandardOfLiving(command, collectionManager)
             is Command.FilterStartsWithName -> processFilterStartsWithName(command, collectionManager)
             is Command.FilterGreaterThanClimate -> processFilterGreaterThanClimate(command, collectionManager)
-            is Command.ExecuteScript -> processExecuteScript(command)
+            is Command.ExecuteScript -> processExecuteScript(command, collectionManager)
             is Command.Exit -> processExit()
             is Command.Save -> processSave(collectionManager)
         }
@@ -243,8 +243,67 @@ class CommandProcessor {
     /**
      * Process ExecuteScript command
      */
-    private fun processExecuteScript(command: Command.ExecuteScript): Response {
-        return Response(true, "Script execution not implemented yet: ${command.fileName}")
+    private fun processExecuteScript(command: Command.ExecuteScript, collectionManager: CollectionManager): Response {
+        return try {
+            val file = java.io.File(command.fileName)
+            if (!file.exists()) {
+                return Response(false, "Script file not found: ${command.fileName}")
+            }
+
+            val lines = file.readLines().map { it.trim() }.filter { it.isNotEmpty() }
+            var i = 0
+            val results = mutableListOf<String>()
+
+            while (i < lines.size) {
+                val commandLine = lines[i].lowercase()
+
+                if (commandLine == "add") {
+                    // Читаем 9 параметров для add
+                    if (i + 9 < lines.size) {
+                        try {
+                            val name = lines[i + 1]
+                            val x = lines[i + 2].toLongOrNull() ?: throw IllegalArgumentException("Invalid x")
+                            val y = lines[i + 3].toFloatOrNull() ?: throw IllegalArgumentException("Invalid y")
+                            val area = lines[i + 4].toDoubleOrNull() ?: throw IllegalArgumentException("Invalid area")
+                            val population = lines[i + 5].toLongOrNull() ?: throw IllegalArgumentException("Invalid population")
+                            val establishmentDate = java.time.LocalDate.parse(lines[i + 6])
+                            val climate = Climate.valueOf(lines[i + 7])
+                            val standard = StandardOfLiving.valueOf(lines[i + 8])
+                            val meters = lines[i + 9].toFloatOrNull()
+
+                            val city = City(
+                                id = collectionManager.getNextId(),
+                                name = name,
+                                coordinates = Coordinates(x, y),
+                                creationDate = java.time.LocalDateTime.now(),
+                                area = area,
+                                population = population,
+                                metersAboveSeaLevel = meters,
+                                establishmentDate = establishmentDate,
+                                climate = climate,
+                                standardOfLiving = standard,
+                                governor = null
+                            )
+                            collectionManager.addCity(city)
+                            results.add("City '$name' added successfully")
+                            i += 10
+                        } catch (e: Exception) {
+                            results.add("Error adding city: ${e.message}")
+                            i += 10
+                        }
+                    } else {
+                        results.add("Error: Not enough parameters for add command")
+                        break
+                    }
+                } else {
+                    i++
+                }
+            }
+
+            Response(true, "Script executed successfully:\n${results.joinToString("\n")}")
+        } catch (e: Exception) {
+            Response(false, "Error executing script: ${e.message}")
+        }
     }
 
     /**
@@ -258,6 +317,11 @@ class CommandProcessor {
      * Process Save command
      */
     private fun processSave(collectionManager: CollectionManager): Response {
-        return Response(true, "Collection saved to file")
+        return try {
+            collectionManager.save()
+            Response(true, "Collection saved to file successfully")
+        } catch (e: Exception) {
+            Response(false, "Error saving collection: ${e.message}")
+        }
     }
 }

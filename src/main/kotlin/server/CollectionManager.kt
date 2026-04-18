@@ -153,6 +153,32 @@ class CollectionManager {
             false
         }
     }
+    fun save() {
+        try {
+            val file = java.io.File("data.xml")
+            val xmlMapper = com.fasterxml.jackson.dataformat.xml.XmlMapper.builder()
+                .addModule(com.fasterxml.jackson.datatype.jsr310.JavaTimeModule())
+                .build()
+
+            @com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement(localName = "cities")
+            data class CityWrapper(
+                @com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper(useWrapping = false)
+                @com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty(localName = "city")
+                val cityList: List<City>
+            )
+
+            val wrapper = CityWrapper(cities.toList())
+            val xml = xmlMapper
+                .writerWithDefaultPrettyPrinter()
+                .writeValueAsString(wrapper)
+
+            file.writeText(xml)
+            println("Collection saved to data.xml")
+        } catch (e: Exception) {
+            println("Error saving collection: ${e.message}")
+            e.printStackTrace()
+        }
+    }
 
     /**
      * Get collection info

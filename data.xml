@@ -1,26 +1,52 @@
 <cities>
-  <cities>
-    <cities>
+  <cityList>
+    <cityList>
       <id>1</id>
-      <name>qwe</name>
+      <name>nameExample</name>
       <coordinates>
-        <x>4</x>
-        <y>4.6</y>
+        <x>1</x>
+        <y>2.0</y>
       </coordinates>
       <creationDate>2026</creationDate>
-      <creationDate>3</creationDate>
-      <creationDate>7</creationDate>
+      <creationDate>4</creationDate>
+      <creationDate>18</creationDate>
       <creationDate>15</creationDate>
-      <creationDate>54</creationDate>
-      <creationDate>42</creationDate>
-      <creationDate>275705400</creationDate>
-      <area>45.0</area>
-      <population>65</population>
-      <metersAboveSeaLevel>76.0</metersAboveSeaLevel>
-      <establishmentDate/>
+      <creationDate>39</creationDate>
+      <creationDate>48</creationDate>
+      <creationDate>39071900</creationDate>
+      <area>3.0</area>
+      <population>4</population>
+      <metersAboveSeaLevel>6.0</metersAboveSeaLevel>
+      <establishmentDate>1111</establishmentDate>
+      <establishmentDate>11</establishmentDate>
+      <establishmentDate>11</establishmentDate>
       <climate>RAIN_FOREST</climate>
-      <standardOfLiving/>
+      <standardOfLiving>VERY_HIGH</standardOfLiving>
       <governor/>
-    </cities>
-  </cities>
+    </cityList>
+    <cityList>
+      <id>2</id>
+      <name>nameExample2</name>
+      <coordinates>
+        <x>12</x>
+        <y>22.0</y>
+      </coordinates>
+      <creationDate>2026</creationDate>
+      <creationDate>4</creationDate>
+      <creationDate>18</creationDate>
+      <creationDate>15</creationDate>
+      <creationDate>39</creationDate>
+      <creationDate>48</creationDate>
+      <creationDate>39071900</creationDate>
+      <area>32.0</area>
+      <population>42</population>
+      <metersAboveSeaLevel>6.0</metersAboveSeaLevel>
+      <establishmentDate>1111</establishmentDate>
+      <establishmentDate>11</establishmentDate>
+      <establishmentDate>11</establishmentDate>
+      <climate>RAIN_FOREST</climate>
+      <standardOfLiving>VERY_HIGH</standardOfLiving>
+      <governor/>
+    </cityList>
+  </cityList>
 </cities>
