@@ -58,15 +58,17 @@ object InputValidator {
         while (true) {
             try {
                 print(prompt)
-                val value = scanner.nextFloat()
-                scanner.nextLine()
+                var input = scanner.nextLine().trim()
+                // Заменяем запятую на точку
+                input = input.replace(",", ".")
+                val value = input.toFloat()
+
                 if (max != null && value > max) {
                     println("Value must be less than or equal to $max")
                     continue
                 }
                 return value
             } catch (e: Exception) {
-                scanner.nextLine()
                 println("Invalid input. Please enter a number.")
             }
         }

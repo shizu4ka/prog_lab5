@@ -3,11 +3,14 @@ package client
 import common.Command
 import java.util.Scanner
 
+/**
+ * Main client function for interactive mode
+ */
 fun main() {
-    val client = Client()
+    val client = Client("localhost", 9999)
 
     if (!client.connect()) {
-        println("Cannot connect to server")
+        println("Failed to connect to server")
         return
     }
 
@@ -18,43 +21,96 @@ fun main() {
 
     while (true) {
         print("> ")
-        val input = scanner.nextLine().trim()
+        val input = scanner.nextLine().trim().split(" ")
 
         if (input.isEmpty()) continue
 
-        val parts = input.split(" ", limit = 2)
-        val command = parts[0].lowercase()
-        val arg = if (parts.size > 1) parts[1] else ""
-
-        try {
-            val cmd = when (command) {
-                "help" -> Command.Help()
-                "info" -> Command.Info()
-                "show" -> Command.Show()
-                "add" -> commandBuilder.buildAddCommand()
-                "update" -> {
-                    val id = arg.toLongOrNull() ?: return println("Invalid ID")
-                    commandBuilder.buildUpdateCommand(id)
+        val command = when (input[0].lowercase()) {
+            "help" -> Command.Help()
+            "info" -> Command.Info()
+            "show" -> Command.Show()
+            "add" -> commandBuilder.buildAddCommand()
+            "update" -> {
+                if (input.size < 2) {
+                    println("Usage: update <id>")
+                    continue
                 }
-                "remove_by_id" -> Command.RemoveById(arg.toLongOrNull() ?: return println("Invalid ID"))
-                "remove_at" -> Command.RemoveAt(arg.toIntOrNull() ?: return println("Invalid index"))
-                "remove_last" -> Command.RemoveLast()
-                "clear" -> Command.Clear()
-                "exit" -> break
-                else -> {
-                    println("Unknown command: $command")
+                commandBuilder.buildUpdateCommand(input[1].toLongOrNull() ?: continue)
+            }
+            "remove_by_id" -> {
+                if (input.size < 2) {
+                    println("Usage: remove_by_id <id>")
+                    continue
+                }
+                Command.RemoveById(input[1].toLongOrNull() ?: continue)
+            }
+            "remove_at" -> {
+                if (input.size < 2) {
+                    println("Usage: remove_at <index>")
+                    continue
+                }
+                Command.RemoveAt(input[1].toIntOrNull() ?: continue)
+            }
+            "remove_last" -> Command.RemoveLast()
+            "clear" -> Command.Clear()
+            "add_if_max" -> commandBuilder.buildAddCommand().let { Command.AddIfMax((it as Command.Add).city) }
+            "filter_by_standard" -> {
+                if (input.size < 2) {
+                    println("Usage: filter_by_standard <standard>")
+                    continue
+                }
+                try {
+                    Command.FilterByStandardOfLiving(common.StandardOfLiving.valueOf(input[1]))
+                } catch (e: Exception) {
+                    println("Invalid standard of living")
                     continue
                 }
             }
-
-            client.sendCommand(cmd)
-            val response = client.receiveResponse()
-            if (response != null) {
-                println("Server: ${response.message}")
+            "filter_starts_with_name" -> {
+                if (input.size < 2) {
+                    println("Usage: filter_starts_with_name <prefix>")
+                    continue
+                }
+                Command.FilterStartsWithName(input.drop(1).joinToString(" "))
             }
-        } catch (e: Exception) {
-            println("Error: ${e.message}")
+            "filter_greater_than_climate" -> {
+                if (input.size < 2) {
+                    println("Usage: filter_greater_than_climate <climate>")
+                    continue
+                }
+                try {
+                    Command.FilterGreaterThanClimate(common.Climate.valueOf(input[1]))
+                } catch (e: Exception) {
+                    println("Invalid climate")
+                    continue
+                }
+            }
+            "execute_script" -> {
+                if (input.size < 2) {
+                    println("Usage: execute_script <file_name>")
+                    continue
+                }
+                Command.ExecuteScript(input.drop(1).joinToString(" "))
+            }
+            "exit" -> Command.Exit()
+            "save" -> Command.Save()
+            else -> {
+                println("Unknown command. Type 'help' for available commands.")
+                continue
+            }
         }
+
+        client.sendCommand(command)
+        val response = client.receiveResponse()
+
+        if (response != null) {
+            println(response.message)
+            if (response.data != null) {
+                println("Data: ${response.data}")
+            }
+        }
+
+        if (input[0].lowercase() == "exit") break
     }
 
     client.disconnect()

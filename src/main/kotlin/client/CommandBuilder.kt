@@ -26,6 +26,14 @@ class CommandBuilder(private val scanner: Scanner) {
     }
 
     /**
+     * Build ExecuteScript command
+     */
+    fun buildExecuteScriptCommand(): Command.ExecuteScript {
+        val fileName = InputValidator.readString("Enter script file name: ")
+        return Command.ExecuteScript(fileName)
+    }
+
+    /**
      * Build City from user input
      */
     private fun buildCity(): City {
@@ -45,7 +53,7 @@ class CommandBuilder(private val scanner: Scanner) {
         val governor = readGovernor()
 
         return City(
-            id = 0,
+            id = 1L,
             name = name,
             coordinates = coordinates,
             creationDate = LocalDateTime.now(),
