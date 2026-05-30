@@ -3,13 +3,12 @@ plugins {
     kotlin("jvm") version "2.3.0"
     id("com.gradleup.shadow") version "9.4.0"
 }
-tasks.withType<ShadowJar> {
+tasks.jar {
     manifest {
-        attributes["Main-Class"] = "MainKt"
+        attributes["Main-Class"] = "client.ClientMainKt"
     }
-    // Название готового файла
-    archiveBaseName.set("my-project")
-    archiveClassifier.set("all")
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    from(configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) })
 }
 
 group = "org.example"
@@ -24,7 +23,6 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.15.2")
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.15.2")
     testImplementation("org.junit.jupiter:junit-jupiter:5.10.0")
-    testImplementation(kotlin("test"))
 }
 
 kotlin {

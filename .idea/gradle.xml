@@ -12,6 +12,26 @@
           </set>
         </option>
       </GradleProjectSettings>
+      <GradleProjectSettings>
+        <option name="externalProjectPath" value="$PROJECT_DIR$/prog_lab6_client" />
+        <option name="gradleHome" value="" />
+        <option name="gradleJvm" value="ms-17" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$/prog_lab6_client" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+      <GradleProjectSettings>
+        <option name="externalProjectPath" value="$PROJECT_DIR$/prog_lab6_server" />
+        <option name="gradleHome" value="" />
+        <option name="gradleJvm" value="ms-17" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$/prog_lab6_server" />
+          </set>
+        </option>
+      </GradleProjectSettings>
     </option>
   </component>
 </project>
