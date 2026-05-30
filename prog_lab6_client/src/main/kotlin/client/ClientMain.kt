@@ -1,118 +1,138 @@
 package client
 
-import common.Command
 import java.util.Scanner
 
 /**
  * Main client function for interactive mode
  */
 fun main() {
-    val client = Client("localhost", 9999)
+    val scanner = Scanner(System.`in`)
+    
+    print("Enter server host (default: localhost): ")
+    val host = scanner.nextLine().trim().ifEmpty { "localhost" }
+    
+    print("Enter server port (default: 9999): ")
+    val port = scanner.nextLine().trim().toIntOrNull() ?: 9999
+    
+    val client = Client(host, port)
 
     if (!client.connect()) {
         println("Failed to connect to server")
         return
     }
 
-    val scanner = Scanner(System.`in`)
-    val commandBuilder = CommandBuilder(scanner)
+    print("Enter username: ")
+    val username = scanner.nextLine().trim()
+    
+    print("Enter password: ")
+    val password = scanner.nextLine().trim()
+
+    if (!client.authenticate(username, password)) {
+        println("Authentication failed")
+        client.disconnect()
+        return
+    }
 
     println("Connected to server. Enter commands (type 'help' for available commands):")
 
     while (true) {
         print("> ")
-        val input = scanner.nextLine().trim().split(" ")
+        val input = scanner.nextLine().trim()
 
         if (input.isEmpty()) continue
 
-        val command = when (input[0].lowercase()) {
-            "help" -> Command.Help()
-            "info" -> Command.Info()
-            "show" -> Command.Show()
-            "add" -> commandBuilder.buildAddCommand()
-            "update" -> {
-                if (input.size < 2) {
+        val parts = input.split("\\s+".toRegex())
+        val command = parts[0].uppercase()
+
+        when (command) {
+            "HELP" -> {
+                client.sendCommand("HELP")
+                val response = client.receiveResponse()
+                println(response ?: "No response")
+            }
+            "INFO" -> {
+                client.sendCommand("INFO")
+                val response = client.receiveResponse()
+                println(response ?: "No response")
+            }
+            "SHOW" -> {
+                client.sendCommand("SHOW")
+                val response = client.receiveResponse()
+                println(response ?: "No response")
+            }
+            "ADD" -> {
+                println("Enter city name:")
+                val name = scanner.nextLine().trim()
+                println("Enter X coordinate:")
+                val x = scanner.nextLine().trim().toDoubleOrNull() ?: 0.0
+                println("Enter Y coordinate:")
+                val y = scanner.nextLine().trim().toFloatOrNull() ?: 0f
+                println("Enter area:")
+                val area = scanner.nextLine().trim().toDoubleOrNull() ?: 0.0
+                println("Enter population:")
+                val population = scanner.nextLine().trim().toLongOrNull() ?: 0L
+
+                client.sendCommandWithParams("ADD", name, x, y, area, population)
+                val response = client.receiveResponse()
+                println(response ?: "No response")
+            }
+            "UPDATE" -> {
+                if (parts.size < 2) {
                     println("Usage: update <id>")
                     continue
                 }
-                commandBuilder.buildUpdateCommand(input[1].toLongOrNull() ?: continue)
+                val id = parts[1].toLongOrNull()
+                if (id == null) {
+                    println("Invalid ID")
+                    continue
+                }
+
+                println("Enter new city name:")
+                val name = scanner.nextLine().trim()
+                println("Enter new X coordinate:")
+                val x = scanner.nextLine().trim().toDoubleOrNull() ?: 0.0
+                println("Enter new Y coordinate:")
+                val y = scanner.nextLine().trim().toFloatOrNull() ?: 0f
+                println("Enter new area:")
+                val area = scanner.nextLine().trim().toDoubleOrNull() ?: 0.0
+                println("Enter new population:")
+                val population = scanner.nextLine().trim().toLongOrNull() ?: 0L
+
+                client.sendCommandWithParams("UPDATE", id, name, x, y, area, population)
+                val response = client.receiveResponse()
+                println(response ?: "No response")
             }
-            "remove_by_id" -> {
-                if (input.size < 2) {
+            "REMOVE_BY_ID" -> {
+                if (parts.size < 2) {
                     println("Usage: remove_by_id <id>")
                     continue
                 }
-                Command.RemoveById(input[1].toLongOrNull() ?: continue)
+                val id = parts[1].toLongOrNull()
+                if (id == null) {
+                    println("Invalid ID")
+                    continue
+                }
+
+                client.sendCommandWithParams("REMOVE_BY_ID", id)
+                val response = client.receiveResponse()
+                println(response ?: "No response")
             }
-            "remove_at" -> {
-                if (input.size < 2) {
-                    println("Usage: remove_at <index>")
-                    continue
-                }
-                Command.RemoveAt(input[1].toIntOrNull() ?: continue)
+            "CLEAR" -> {
+                client.sendCommand("CLEAR")
+                val response = client.receiveResponse()
+                println(response ?: "No response")
             }
-            "remove_last" -> Command.RemoveLast()
-            "clear" -> Command.Clear()
-            "add_if_max" -> commandBuilder.buildAddCommand().let { Command.AddIfMax((it as Command.Add).city) }
-            "filter_by_standard_of_living" -> {
-                if (input.size < 2) {
-                    println("Usage: filter_by_standard <standard>")
-                    continue
-                }
-                try {
-                    Command.FilterByStandardOfLiving(common.StandardOfLiving.valueOf(input[1]))
-                } catch (e: Exception) {
-                    println("Invalid standard of living")
-                    continue
-                }
-            }
-            "filter_starts_with_name" -> {
-                if (input.size < 2) {
-                    println("Usage: filter_starts_with_name <prefix>")
-                    continue
-                }
-                Command.FilterStartsWithName(input.drop(1).joinToString(" "))
-            }
-            "filter_greater_than_climate" -> {
-                if (input.size < 2) {
-                    println("Usage: filter_greate   r_than_climate <climate>")
-                    continue
-                }
-                try {
-                    Command.FilterGreaterThanClimate(common.Climate.valueOf(input[1]))
-                } catch (e: Exception) {
-                    println("Invalid climate")
-                    continue
-                }
-            }
-            "execute_script" -> {
-                if (input.size < 2) {
-                    println("Usage: execute_script <file_name>")
-                    continue
-                }
-                Command.ExecuteScript(input.drop(1).joinToString(" "))
-            }
-            "exit" -> {
-                client.sendCommand(Command.Save())
-                val saveResponse = client.receiveResponse()
-                if (saveResponse != null) {
-                    println(saveResponse.message)
-                }
+            "EXIT" -> {
+                client.sendCommand("EXIT")
+                val response = client.receiveResponse()
+                println(response ?: "No response")
                 println("Goodbye!")
                 client.disconnect()
                 return
             }
             else -> {
                 println("Unknown command. Type 'help' for available commands.")
-                continue
             }
-        }
-
-        client.sendCommand(command)
-        val response = client.receiveResponse()
-
-        if (response != null) {
-            println(response.message)
         }
     }
 }
