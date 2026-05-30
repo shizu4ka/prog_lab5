@@ -5,7 +5,7 @@ plugins {
 }
 tasks.jar {
     manifest {
-        attributes["Main-Class"] = "server.Server"
+        attributes["Main-Class"] = "server.ServerKt"
     }
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     from(configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) })
@@ -22,6 +22,14 @@ dependencies {
     implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.15.2")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.15.2")
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.15.2")
+    
+    // PostgreSQL JDBC Driver
+    implementation("org.postgresql:postgresql:42.7.1")
+    
+    // Logging
+    implementation("org.slf4j:slf4j-api:2.0.9")
+    implementation("ch.qos.logback:logback-classic:1.4.11")
+    
     testImplementation("org.junit.jupiter:junit-jupiter:5.10.0")
 }
 
