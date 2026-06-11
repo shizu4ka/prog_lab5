@@ -2,56 +2,13 @@ package common
 
 import java.io.Serializable
 
-/**
- * Sealed class representing all possible commands that can be sent from client to server
- */
-sealed class Command : Serializable {
+data class Command(
+    val type: String,
+    val params: Map<String, Any> = emptyMap()
+) : Serializable
 
-    /** Help command - display available commands */
-    class Help : Command()
-
-    /** Info command - display collection information */
-    class Info : Command()
-
-    /** Show command - display all elements in collection */
-    class Show : Command()
-
-    /** Add command - add new city to collection */
-    data class Add(val city: City) : Command()
-
-    /** Update command - update existing city by id */
-    data class Update(val id: Long, val city: City) : Command()
-
-    /** RemoveById command - remove city by id */
-    data class RemoveById(val id: Long) : Command()
-
-    /** RemoveAt command - remove city at specific index */
-    data class RemoveAt(val index: Int) : Command()
-
-    /** RemoveLast command - remove last city from collection */
-    class RemoveLast : Command()
-
-    /** Clear command - clear entire collection */
-    class Clear : Command()
-
-    /** AddIfMax command - add city if its area is maximum */
-    data class AddIfMax(val city: City) : Command()
-
-    /** FilterByStandardOfLiving command - filter cities by standard of living */
-    data class FilterByStandardOfLiving(val standard: StandardOfLiving) : Command()
-
-    /** FilterStartsWithName command - filter cities by name prefix */
-    data class FilterStartsWithName(val name: String) : Command()
-
-    /** FilterGreaterThanClimate command - filter cities by climate */
-    data class FilterGreaterThanClimate(val climate: Climate) : Command()
-
-    /** ExecuteScript command - execute commands from script file */
-    data class ExecuteScript(val fileName: String) : Command()
-
-    /** Exit command - terminate client */
-    class Exit : Command()
-
-    /** Save command - save collection to file (server only) */
-    class Save : Command()
-}
+data class Response(
+    val success: Boolean,
+    val message: String,
+    val data: String = ""
+) : Serializable

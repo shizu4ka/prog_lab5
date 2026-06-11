@@ -1,64 +1,46 @@
 package common
 
-import java.io.Serializable
+import java.math.BigInteger
 import java.time.LocalDate
 import java.time.LocalDateTime
 
-/**
- * Data class representing a City
- *
- * @property id Unique identifier, must be > 0, auto-generated
- * @property name Name of the city, non-null and non-empty
- * @property coordinates Geographic coordinates, non-null
- * @property creationDate Date of creation, auto-generated
- * @property area Area of the city, must be > 0
- * @property population Population of the city, must be > 0
- * @property metersAboveSeaLevel Height above sea level
- * @property establishmentDate Date when city was established
- * @property climate Climate type, nullable
- * @property standardOfLiving Standard of living, nullable
- * @property governor City governor (Human), nullable
- */
 data class City(
     val id: Long,
-    val name: String,
-    val coordinates: Coordinates,
-    val creationDate: LocalDateTime,
-    val area: Double,
-    val population: Long,
-    val metersAboveSeaLevel: Float?,
-    val establishmentDate: LocalDate?,
-    val climate: Climate?,
-    val standardOfLiving: StandardOfLiving?,
-    val governor: Human?
-) : Comparable<City>, Serializable {
+    val owner: Int,
+    var name: String,
+    var coordinates: Coordinates,
+    var creationDate: LocalDateTime,
+    var area: Double,
+    var population: BigInteger,
+    var metersAboveSeaLevel: Float?,
+    var establishmentDate: LocalDate?,
+    var climate: Climate?,
+    var standardOfLiving: StandardOfLiving?,
+    var governor: Human?
+) {
     init {
-        require(id > 0) { "ID must be greater than 0" }
-        require(name.isNotEmpty()) { "Name cannot be empty" }
-        require(area > 0) { "Area must be greater than 0" }
-        require(population > 0) { "Population must be greater than 0" }
+        require(id > 0) { "id must be greater than 0" }
+        require(name.isNotEmpty()) { "name cannot be empty" }
+        require(area > 0) { "area must be greater than 0" }
+        require(population.toLong() > 0) { "population must be greater than 0" }
     }
+}
 
-    /**
-     * Compare cities by area (for sorting)
-     */
-    override fun compareTo(other: City): Int = this.area.compareTo(other.area)
+data class Coordinates(
+    val x: Double,
+    val y: Float
+)
 
-    override fun toString(): String {
-        return """
-            City(
-                id=$id,
-                name='$name',
-                coordinates=$coordinates,
-                creationDate=$creationDate,
-                area=$area,
-                population=$population,
-                metersAboveSeaLevel=$metersAboveSeaLevel,
-                establishmentDate=$establishmentDate,
-                climate=$climate,
-                standardOfLiving=$standardOfLiving,
-                governor=$governor
-            )
-        """.trimIndent()
-    }
+data class Human(
+    val name: String,
+    val height: Int,
+    val birthday: LocalDate?
+)
+
+enum class Climate {
+    OCEANIC, CONTINENTAL, MODERATE, RAIN_FOREST, SNOW
+}
+
+enum class StandardOfLiving {
+    ULTRA_HIGH, VERY_HIGH, HIGH, MEDIUM, LOW
 }
